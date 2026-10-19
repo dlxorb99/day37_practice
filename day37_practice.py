@@ -19,7 +19,11 @@ import streamlit as st # 웹 기반 사용자 인터페이스
 from dotenv import load_dotenv
 
 
+BASE = Path(__file__).resolve().parent
+
 load_dotenv() # .env 로딩
+
+SQL_DIR = Path(__file__).resolve().parent
 
 # 입력 파일 최대 크기를 10Mbytes로 제한
 MAX_BYTES = 10 * 1024 * 1024
@@ -50,6 +54,14 @@ FACILITIES = {
 # ⑧ 요청 ID, 시각, 사용 모델, 오류 여부, 처리시간을 JSONL로 기록합니다.
 # ⑨ Streamlit에서 음성 결과, 구간별 소요시간, 최근 이력을 확인합니다.
 
+def load_sql(filename):
+    path = (SQL_DIR / filename).resolve() # SQL파일의 서버상의 실제경로
+    # 생성된 sql디렉토리에 SQL파일이 없거나 SQL파일의 확장자가 sql이 아니라면
+    if path.parent != SQL_DIR.resolve() or path.suffix != '.sql':
+        raise ValueError('sql폴더의 .sql파일명만 지정하세요')
+    return path.read_text(encoding='utf-8')
+
+
 def validate_wav(audio):
 
     try:
@@ -74,7 +86,7 @@ def validate_wav(audio):
         'duration_sec': round(frames / sample_rate, 2)
     }
 
-@st.cache_resource(show_spinner='Whisper 모델을 로딩하고 있습니다...')
+@st.cache_resource(show_spinner='Whisper 모델을 로딩 중...')
 def load_stt_model(model_size):
     return WhisperModel(model_size, device='CPU', compute_type='int8')
 
@@ -136,10 +148,10 @@ def store_meta(meta):
         return
 
     try:
-        with psycopg.connect(database_url, connect_time=5) as conn:
+        with psycopg.connect(database_url, connect_timeout=5) as conn:
             with conn.cursor() as cur:
-                cur.execute('create_table.sql')
-                cur.execute('insert_table.sql',
+                cur.execute(load_sql('create_table.sql'))
+                cur.execute(load_sql('insert_table.sql'),
                     (
                         meta['request_id'], meta['created_at'], meta['status'],
                         meta['stt_ms'], meta['reply_ms'], meta['tts_ms'],
@@ -281,167 +293,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
