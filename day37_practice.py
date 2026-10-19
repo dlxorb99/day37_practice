@@ -221,12 +221,7 @@ def main():
 
     with st.form('voice_form'):
 
-        source = st.radio('음성 입력 방식', ['WAV파일 업로드', '마이크 녹음'])
-
-        if source == 'WAV파일 업로드':
-            uploaded = st.file_uploader('실제 WAV파일을 선택하세요', type=['wav'])
-        else:
-            uploaded = st.audio_input('마이크로 녹음하세요')
+        uploaded = st.audio_input('마이크로 녹음하세요')
 
         model_size = st.selectbox(
             'STT모델',
@@ -245,7 +240,7 @@ def main():
         return
 
     if uploaded is None:
-        st.error('WAV파일을 업로드하거나 녹음해주세요')
+        st.error('녹음된 파일이 없습니다')
         return
 
     audio = uploaded.getvalue()
@@ -284,7 +279,6 @@ def main():
         st.subheader('TTS 합성 음성')
         st.audio(output, format=mime)
 
-        st.download_button('TTS MP3 저장', output, 'reply.mp3', mime=mime)
 
     st.metric('총 처리시간', f'{meta['total_ms']:.0f} ms')
 
