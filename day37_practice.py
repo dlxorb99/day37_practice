@@ -211,6 +211,21 @@ def run_pipeline(audio, model_size, voice_id):
 
     return result, marks, meta, error
 
+def recent_log():
+    if not LOG_PATH.exists():
+        return
+
+    with LOG_PATH.open('r', encoding='utf-8-sig') as f:
+        lines = f.readlines()
+
+    logs = []
+
+    for line in lines:
+        logs.append(json.loads(line))
+    return logs
+
+
+
 def main():
     st.set_page_config(
         page_title='캠퍼스 시설 안내 음성 도우미',
@@ -236,8 +251,8 @@ def main():
 
         submitted = st.form_submit_button('음성 파이프라인 실행')
 
-    if not submitted:
-        return
+    # if not submitted:
+    #     return
 
     if uploaded is None:
         st.error('녹음된 파일이 없습니다')
@@ -286,6 +301,13 @@ def main():
 
     st.json(meta)
 
+    st.subheader('최근 실행 이력')
+    logs = recent_log()
+
+    if logs:
+        st.dataframe(logs)
+    else:
+        st.info('최근 실행 이력이 없습니다')
 
 if __name__ == '__main__':
     main()
