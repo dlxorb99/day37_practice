@@ -168,7 +168,7 @@ def run_pipeline(audio, model_size, voice_id):
 
     digest = hashlib.sha256(audio).hexdigest()
 
-    marks = {'stt_ms': 0.0, 'reply_ms': 0.0, 'tts_ms': 0.0}
+    marks = {'stt_ms': 0.0, 'reply_ms': 0.0, 'tts_ms': 0.0, 'total_ms': 0.0}
 
     started = time.perf_counter()
 
@@ -187,6 +187,8 @@ def run_pipeline(audio, model_size, voice_id):
         t0 = time.perf_counter()
         output, mime = synthesize_speech(reply, voice_id)
         marks['tts_ms'] = (time.perf_counter() - t0) * 1000
+
+        marks['total_ms'] = (time.perf_counter() - started) * 1000
 
         result = (transcript, reply, output, mime)
 
