@@ -1,5 +1,6 @@
 streamlit
 python-dotenv
-faster-whisper
+faster-whisper==1.1.0
 edge-tts
 psycopg[binary]
+av < 18.2.0
