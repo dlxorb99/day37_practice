@@ -62,7 +62,7 @@ def validate_wav(audio):
             compression = wav.getcomptype()
 
     except (wave.Error, EOFError, OSError) as e:
-        raise ValueError('validate쪽 다시') from e
+        raise ValueError('유효한 비압축 PCM WAV 파일을 입력해 주세요') from e
 
     if compression != 'NONE' or channels not in (1, 2) or sample_rate <= 0 or frames <= 0:
         raise ValueError('모노/스테레오 비압축 PCM WAV 파일이 필요합니다')

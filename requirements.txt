@@ -2,3 +2,4 @@ streamlit
 python-dotenv
 faster-whisper
 edge-tts
+psycopg
