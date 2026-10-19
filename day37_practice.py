@@ -251,8 +251,8 @@ def main():
 
         submitted = st.form_submit_button('음성 파이프라인 실행')
 
-    # if not submitted:
-    #     return
+    if not submitted:
+        return
 
     if uploaded is None:
         st.error('녹음된 파일이 없습니다')
