@@ -1,0 +1,8 @@
+.venv/
+venv/
+__pycache__/
+.pys
+.env
+voice_runs.jsonl
+사용자및데이터베이스생성.txt
+day37_ex.py

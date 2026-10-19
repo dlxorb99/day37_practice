@@ -1,0 +1,12 @@
+asyncio
+hashlib
+json
+os
+tempfile
+time
+uuid
+wave
+python-datetime
+python-pathlib
+streamlit
+python-dotenv
