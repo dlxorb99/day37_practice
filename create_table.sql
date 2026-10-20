@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS voice_runs (
+CREATE TABLE IF NOT EXISTS voice_runs_campus (
     request_id TEXT PRIMARY KEY, -- 요청 ID
     created_at TIMESTAMPTZ NOT NULL, -- 생성일시 (타임존)
     status TEXT NOT NULL, -- 상태문자열

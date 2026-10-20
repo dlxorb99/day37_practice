@@ -54,6 +54,7 @@ FACILITIES = {
 # ⑧ 요청 ID, 시각, 사용 모델, 오류 여부, 처리시간을 JSONL로 기록합니다.
 # ⑨ Streamlit에서 음성 결과, 구간별 소요시간, 최근 이력을 확인합니다.
 
+
 def load_sql(filename):
     path = (SQL_DIR / filename).resolve() # SQL파일의 서버상의 실제경로
     # 생성된 sql디렉토리에 SQL파일이 없거나 SQL파일의 확장자가 sql이 아니라면
@@ -225,7 +226,6 @@ def recent_log():
     return logs
 
 
-
 def main():
     st.set_page_config(
         page_title='캠퍼스 시설 안내 음성 도우미',
@@ -236,7 +236,12 @@ def main():
 
     with st.form('voice_form'):
 
-        uploaded = st.audio_input('마이크로 녹음하세요')
+        source = st.radio('음성 입력 방식', ['WAV파일 업로드', '마이크 녹음'])
+
+        if source == 'WAV파일 업로드':
+            uploaded = st.file_uploader('실제 WAV파일을 선택하세요', type=['wav'])
+        else:
+            uploaded = st.audio_input('마이크로 한국어 음성을 녹음하세요')
 
         model_size = st.selectbox(
             'STT모델',
@@ -293,7 +298,6 @@ def main():
 
         st.subheader('TTS 합성 음성')
         st.audio(output, format=mime)
-
 
     st.metric('총 처리시간', f'{meta['total_ms']:.0f} ms')
 
